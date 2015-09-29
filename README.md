@@ -15,7 +15,7 @@ Lookup *mac_vendor_lookup* takes *mac* address an input argument; it performs a 
 The TCP/IP layer 2 Media Access Control (MAC) address of a packet's source/destination, such as 06:10:9f:eb:8f:14. Note: Always force lower case on this field. Note: Always use colons instead of dashes, spaces, or no separator.
 ```
 
-*Note:* Lookup data is static, as in, it is refreshed every app release. It's possible to setup more frequent data refresh, by running the following:
+**Note:** Lookup data is static, as in, it is refreshed every app release. It's possible to setup more frequent data refresh, by running the following:
 
 `splunk cmd python SA-mac_vendor/bin/ieee_oui_parser.py > SA-mac_vendor/lookups/mac_vendor_lookup.csv`
 
@@ -26,10 +26,10 @@ The TCP/IP layer 2 Media Access Control (MAC) address of a packet's source/desti
 The app was tested on Splunk 6.2+ on CentOS Linux 7.1.
 
 ##Syntax
-`... | `normalize_mac_address(mac)` | lookup mac_vendor_lookup mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country | ...`
+`... | ``normalize_mac_address(mac)`` | lookup mac_vendor_lookup mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country | ...`
 
 ##Example
-`| localop | stats count | fields - count | eval src_mac="cc-20-e8-01-ab-3f" | `normalize_mac_address(src_mac)` | lookup mac_vendor_lookup mac AS src_mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country`
+`| localop | stats count | fields - count | eval src_mac="cc-20-e8-01-ab-3f" | ``normalize_mac_address(src_mac)`` | lookup mac_vendor_lookup mac AS src_mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country`
 
 #Legal
 * *Splunk* is a registered trademark of Splunk, Inc.
