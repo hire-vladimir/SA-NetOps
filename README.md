@@ -26,10 +26,10 @@ The TCP/IP layer 2 Media Access Control (MAC) address of a packet's source/desti
 The app was tested on Splunk 6.2+ on CentOS Linux 7.1.
 
 ##Syntax
-`... | ``normalize_mac_address(mac)`` | lookup mac_vendor_lookup mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country | ...`
+```... | `normalize_mac_address(mac)` | lookup mac_vendor_lookup mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country | ...```
 
 ##Example
-`| localop | stats count | fields - count | eval src_mac="cc-20-e8-01-ab-3f" | ``normalize_mac_address(src_mac)`` | lookup mac_vendor_lookup mac AS src_mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country`
+```| localop | stats count | fields - count | eval src_mac="cc-20-e8-01-ab-3f" | `normalize_mac_address(src_mac)` | lookup mac_vendor_lookup mac AS src_mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country```
 
 #Legal
 * *Splunk* is a registered trademark of Splunk, Inc.
