@@ -5,6 +5,8 @@ This supporting add-on (SA) for Splunk enables lookup of *MAC* address field to 
 
 Mapping information is obtained from IEEE, found at http://standards.ieee.org/regauth/oui/oui.txt. Additional detail can be found at http://standards.ieee.org/faqs/regauth.html
 
+This project is hosted on GitHub, see https://github.com/hire-vladimir/SA-mac_vendor
+
 #Install
 App installation is simple, and only needs to be present on the search head. Documentation around app installation can be found at http://docs.splunk.com/Documentation/AddOns/released/Overview/Singleserverinstall
 
