@@ -5,7 +5,7 @@ This supporting add-on (SA) for Splunk enables lookup of *MAC* address field to 
 
 Mapping information is obtained from IEEE, found at http://standards.ieee.org/regauth/oui/oui.txt. Additional detail can be found at http://standards.ieee.org/faqs/regauth.html
 
-This project is hosted on GitHub, see https://github.com/hire-vladimir/SA-mac_vendor
+This project is hosted on GitHub, see https://github.com/hire-vladimir/SA-NetOps
 
 #Install
 App installation is simple, and only needs to be present on the search head. Documentation around app installation can be found at http://docs.splunk.com/Documentation/AddOns/released/Overview/Singleserverinstall
@@ -19,10 +19,10 @@ The TCP/IP layer 2 Media Access Control (MAC) address of a packet's source/desti
 
 **Note:** Lookup data is static, as in, it is refreshed every app release. It's possible to setup more frequent data refresh, by running the following:
 
-`splunk cmd python SA-mac_vendor/bin/ieee_oui_parser.py > SA-mac_vendor/lookups/mac_vendor_lookup.csv`
+`splunk cmd python SA-NetOps/bin/ieee_oui_parser.py > SA-NetOps/lookups/mac_vendor_lookup.csv`
 
 ## Screenshot
-![mac address to vendor lookup for Splunk ](https://raw.githubusercontent.com/hire-vladimir/SA-mac_vendor/master/static/screenshot.png)
+![mac address to vendor lookup for Splunk ](https://raw.githubusercontent.com/hire-vladimir/SA-NetOps/master/static/screenshot.png)
 
 ##System requirements
 The app was tested on Splunk 6.2+ on CentOS Linux 7.1.
