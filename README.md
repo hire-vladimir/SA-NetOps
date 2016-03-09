@@ -1,5 +1,3 @@
-[![PayPal donate button](https://img.shields.io/badge/paypal-donate-yellow.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=E36NM78QVXA46 "Donate once-off to this project using Paypal")
-
 #Welcome
 This supporting add-on (SA) for Splunk enables lookup of *MAC* address field to IEEE registered vendor information; additional capabilities such as normalization of *MAC* address are also provided per Splunk Common Information model http://docs.splunk.com/Documentation/CIM/latest/User/NetworkTraffic. App comes with sample dashboards to showcase the dataset, however, it can be safely hidden without impacting functionality; details on hiding an app are described at http://docs.splunk.com/Documentation/Splunk/latest/AdvancedDev/ShareYourWork#Set_visibility
 
