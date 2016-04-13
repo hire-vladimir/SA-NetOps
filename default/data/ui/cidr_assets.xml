@@ -18,8 +18,9 @@
         <p>This is an example search for creating the sample_cidr_network lookup. You should update the vlan_inventory lookup with your specific network information.</p>
 examples:
 <pre data-language="splunk">
-sample search: | inputlookup sample_vlan_inventory | lookup subnet_to_cidr | outputlookup sample_cidr_network
-production search: | inputlookup vlan_inventory | lookup subnet_to_cidr | outputlookup cidr_network
+sample search: | inputlookup sample_vlan_inventory | lookup subnet_to_cidr subnet_mask OUTPUT cidr, binary_mask, host_count, usable_hosts | eval cidr_address= network+cidr | outputlookup sample_cidr_network
+
+production search: | inputlookup vlan_inventory | lookup subnet_to_cidr subnet_mask OUTPUT cidr, binary_mask, host_count, usable_hosts | eval cidr_address= network+cidr  | outputlookup cidr_network
 </pre>
 <br/>
 <p>Once the cidr_network lookup has been created Splunk will create the following fields automagically:</p>
