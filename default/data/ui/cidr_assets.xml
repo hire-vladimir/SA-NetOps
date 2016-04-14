@@ -1,0 +1,97 @@
+<dashboard>
+  <label>Sample CIDR Assets</label>
+  <row>
+    <panel>
+      <html>
+        <h1>
+          Introduction
+        </h1>
+        <p>
+          This feature is designed to help users identify assets by subnet mask. Most users cannot easily convert subnets to CIDRs withouth some python tool or external scripts.
+          The application ships with sample lookup files and blank template lookup files for the user to populate. Using a similiar syntax below, the customer can delineate subnets in an automatic lookup to run against all data sources.
+          An automatic lookup is preferred because it helps to indentify netwrok traffic trends in various logs. For example, infected assets in a DMZ subnet may not be as high of a priority as infected assets in a PCI subnet. 
+          <br/>
+        </p>
+        <h1>
+          Creating the automatic lookup:
+        </h1>
+        <p>This is an example search for creating the sample_cidr_network lookup. You should update the vlan_inventory lookup with your specific network information.</p>
+examples:
+<pre data-language="splunk">
+sample search: | inputlookup sample_vlan_inventory | lookup subnet_to_cidr subnet_mask OUTPUT cidr, binary_mask, host_count, usable_hosts | eval cidr_address= network+cidr | outputlookup sample_cidr_network
+
+production search: | inputlookup vlan_inventory | lookup subnet_to_cidr subnet_mask OUTPUT cidr, binary_mask, host_count, usable_hosts | eval cidr_address= network+cidr  | outputlookup cidr_network
+</pre>
+<br/>
+<p>Once the cidr_network lookup has been created Splunk will create the following fields automagically:</p>
+<pre>
+network
+physical_address
+priority
+remarks
+segment
+subnet_mask
+zone
+          
+# Other fields you can add:
+# lat
+# lon
+# cidr_address
+# usable_hosts
+# binary_mask
+          
+Alternatively, you can override these to prefix them with src_ or dest_ by overriding props.conf in local.
+          
+LOOKUP-subnet-intelligence_src = cidr_network cidr_address AS src_ip OUTPUT network AS src_network physical_address AS src_physical_address priority AS src_priority remarks AS src_remarks segment AS src_segment subnet_mask AS src_subnet_mask zone AS src_zone
+
+LOOKUP-subnet-intelligence_dest = cidr_network cidr_address AS dest_ip OUTPUT network AS dest_network physical_address AS dest_physical_address priority AS dest_priority remarks AS dest_remarks segment AS dest_segment subnet_mask AS dest_subnet_mask zone AS dest_zone
+
+      </pre>
+      </html>
+    </panel>
+        <panel>
+      <table>
+        <title>Sample Inventory - | inputlookup sample_vlan_inventory</title>
+        <search>
+          <query>| inputlookup sample_vlan_inventory</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="wrap">undefined</option>
+        <option name="rowNumbers">undefined</option>
+        <option name="drilldown">row</option>
+      </table>
+    </panel>
+    
+  </row>
+  <row>
+<panel>
+      <table>
+        <title>This lookup is used to convert subnet masks to CIDR notation - | lookup subnet_to_cidr</title>
+        <search>
+          <query>| inputlookup subnet_to_cidr</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="wrap">undefined</option>
+        <option name="rowNumbers">undefined</option>
+        <option name="drilldown">row</option>
+        <option name="count">8</option>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>Here is an example of what the transformed vlan inventory should look like:</title>
+        <search>
+          <query>| inputlookup sample_cidr_network</query>
+          <earliest>0</earliest>
+          <latest></latest>
+        </search>
+        <option name="wrap">undefined</option>
+        <option name="rowNumbers">undefined</option>
+        <option name="drilldown">row</option>
+        <option name="count">8</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>
