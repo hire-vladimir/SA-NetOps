@@ -1,4 +1,4 @@
-# /usr/bin/env python
+#!/usr/bin/env python
 welcomeText = '''#
 # hire.vladimir@gmail.com
 #
@@ -58,6 +58,7 @@ if __name__ == '__main__':
     logger = setup_logging()
     logger.info('starting..')
     eStart = time.time()
+    wspace = re.compile('\\s+')
     try:
         data = ""
         logger.debug("calling args_count=\"%d\" args=\"%s\"" % (len(sys.argv), str(sys.argv)))
@@ -80,7 +81,9 @@ if __name__ == '__main__':
         for mac, mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country in ma:
             # per http://docs.splunk.com/Documentation/CIM/latest/User/NetworkTraffic
             normalized_mac = "%s:%s:%s" % (mac[0:2], mac[2:4], mac[4:6])
-            print('"%s*","%s","%s","%s","%s"' % (normalized_mac.lower(), mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country))
+            print('"%s*","%s","%s","%s","%s"' % (normalized_mac.lower(), mac_vendor,
+                                                 ' '.join(wspace.split(mac_vendor_address)),
+                                                 ' '.join(wspace.split(mac_vendor_address2)), mac_vendor_country))
     except Exception, e:
         logger.error('error while processing events, exception="%s"' % e)
         # raise Exception(e)

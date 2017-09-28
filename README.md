@@ -30,7 +30,7 @@ The TCP/IP layer 2 Media Access Control (MAC) address of a packet's source/desti
 ![mac address to vendor lookup for Splunk ](https://raw.githubusercontent.com/hire-vladimir/SA-NetOps/master/static/screenshot.png)
 
 ## System requirements
-The app was tested on Splunk 6.2+ on CentOS Linux 7.1.
+The app was tested on Splunk 6.2+ on CentOS Linux 7.1, SUSE Linux Enterprise Server 11.4/12.3, and Ubuntu 16.04.
 
 ## Syntax
 ```... | `normalize_mac_address(mac)` | lookup mac_vendor_lookup mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country | ...```
