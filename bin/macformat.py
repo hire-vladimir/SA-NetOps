@@ -75,6 +75,7 @@ class MACFormatCommand(StreamingCommand):
         doc='''
         **Syntax:** **format=**`[cisco|dash|ieee|none]`
         **Description:** Format of the output MAC address. Defaults to `none`.''',
+        default='none',
         require=False, validate=validators.Set('cisco', 'dash', 'ieee', 'none')
         )
 
@@ -82,6 +83,7 @@ class MACFormatCommand(StreamingCommand):
         doc='''
         **Syntax:** **inputs=***<field-list>*
         **Description:** A comma-delimited list of input fields to convert. Defaults to `macaddress`.''',
+        default=['macaddress'],
         require=False, validate=validators.List()
         )
 
