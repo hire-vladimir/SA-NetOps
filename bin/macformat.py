@@ -94,21 +94,14 @@ class MACFormatCommand(StreamingCommand):
         require=False, validate=validators.List()
         )
 
-    def __init__(self):
-	super(MACFormatCommand, self).__init__()
-        self.logger.debug('MACFormatCommand: format=%s, inputs=%s', self.format, self.inputs)
-        if not self.inputs:
-            self.inputs = ['macaddress']
-        if self.outputs is None:
-            self.outputs = self.inputs
-        if len(self.outputs) < len(self.inputs):
-            self.output += self.inputs[len(self.outputs):]
-
     def stream(self, records):
-        self.logger.debug('MACFormatCommand.stream: format=%s, inputs=%s, outputs=%s', self.format, self.inputs, self.outputs)
         toformat = globals()['_'+self.format]
         inputs = self.inputs
         outputs = self.outputs
+        if outputs is None:
+            outputs = inputs
+        elif len(outputs) < len(inputs):
+            outputs += inputs[len(outputs):]
         for record in records:
             self.logger.debug('MACFormatCommand: record = %s', record)
             for i in range(len(inputs)):
