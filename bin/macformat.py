@@ -25,7 +25,7 @@ class InvalidMACAddress(Exception):
 def split(mac, seg=2):
     '''To handle missing leading 0's in the given MAC address.
     '''
-    x = MACFormat.none(mac)
+    x = _none(mac)
     return [ x[i:i+seg] for i in range(0, 12, seg) ]
 
 def _cisco(mac):
@@ -96,8 +96,7 @@ class MACFormatCommand(StreamingCommand):
 
     def __init__(self):
 	super(MACFormatCommand, self).__init__()
-        self.logger.debug('MACFormatCommand: inputs=%s', self.inputs)
-        self.formatter = globals()['_'+self.format if self.format else '_none']
+        self.logger.debug('MACFormatCommand: format=%s, inputs=%s', self.format, self.inputs)
         if not self.inputs:
             self.inputs = ['macaddress']
         if self.outputs is None:
@@ -106,7 +105,8 @@ class MACFormatCommand(StreamingCommand):
             self.output += self.inputs[len(self.outputs):]
 
     def stream(self, records):
-        toformat = self.formatter
+        self.logger.debug('MACFormatCommand.stream: format=%s, inputs=%s, outputs=%s', self.format, self.inputs, self.outputs)
+        toformat = globals()['_'+self.format]
         inputs = self.inputs
         outputs = self.outputs
         for record in records:
