@@ -78,6 +78,7 @@ if __name__ == '__main__':
         logger.debug("there are %d matches" % len(ma))
 
         print('mac,mac_vendor,mac_vendor_address,mac_vendor_address2,mac_vendor_country')
+        ma.sort()
         for mac, mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country in ma:
             # per http://docs.splunk.com/Documentation/CIM/latest/User/NetworkTraffic
             normalized_mac = "%s:%s:%s" % (mac[0:2], mac[2:4], mac[4:6])

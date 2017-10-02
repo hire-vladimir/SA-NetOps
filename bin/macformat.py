@@ -5,7 +5,7 @@
 ##
 ## Copyright (c) 2012, ww@9Rivers.com. All rights reserved.
 
-import re
+import re, sys
 from splunklib.searchcommands import dispatch, StreamingCommand, Configuration, Option, validators
 
 
@@ -28,19 +28,19 @@ def split(mac, seg=2):
     x = MACFormat.none(mac)
     return [ x[i:i+seg] for i in range(0, 12, seg) ]
 
-def cisco(mac):
+def _cisco(mac):
     ''' 1122.3344.5566 '''
     return '.'.join(split(mac, 4))
 
-def dash(mac):
+def _dash(mac):
     ''' 11-22-33-44-55-66 '''
     return '-'.join(split(mac))
 
-def ieee(mac):
+def _ieee(mac):
     ''' 11:22:33:44:55:66 '''
     return ':'.join(split(mac))
 
-def none(mac):
+def _none(mac):
     ''' 112233445566 '''
     x = delims.split(mac.lower())
     if len(x) == 6:
@@ -75,14 +75,14 @@ class MACFormatCommand(StreamingCommand):
         doc='''
         **Syntax:** **format=**`[cisco|dash|ieee|none]`
         **Description:** Format of the output MAC address. Defaults to `none`.''',
-        require=False, validate=validators.Set('cisco', 'dash', 'ieee', 'none'), default='none'
+        require=False, validate=validators.Set('cisco', 'dash', 'ieee', 'none')
         )
 
     inputs = Option(
         doc='''
         **Syntax:** **inputs=***<field-list>*
         **Description:** A comma-delimited list of input fields to convert. Defaults to `macaddress`.''',
-        require=False, validate=validators.List(), default=['macaddress']
+        require=False, validate=validators.List()
         )
 
     outputs = Option(
@@ -93,18 +93,22 @@ class MACFormatCommand(StreamingCommand):
         )
 
     def __init__(self):
+	super(MACFormatCommand, self).__init__()
+        self.logger.debug('MACFormatCommand: inputs=%s', self.inputs)
+        self.formatter = globals()['_'+self.format if self.format else '_none']
+        if not self.inputs:
+            self.inputs = ['macaddress']
         if self.outputs is None:
             self.outputs = self.inputs
         if len(self.outputs) < len(self.inputs):
             self.output += self.inputs[len(self.outputs):]
-        self.format = locals()[self.format]
 
     def stream(self, records):
-        self.logger.debug('CountMatchesCommand: %s', self)  # logs command line
-        toformat = self.format
+        toformat = self.formatter
         inputs = self.inputs
         outputs = self.outputs
         for record in records:
+            self.logger.debug('MACFormatCommand: record = %s', record)
             for i in range(len(inputs)):
                 mac = record.get(inputs[i])
                 if mac != None:
