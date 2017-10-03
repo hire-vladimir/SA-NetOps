@@ -6,6 +6,8 @@
 ## Copyright (c) 2012, ww@9Rivers.com. All rights reserved.
 
 import re, sys
+from os import path
+from splunk.clilib import cli_common as cli
 from splunklib.searchcommands import dispatch, StreamingCommand, Configuration, Option, validators
 
 
@@ -75,7 +77,6 @@ class MACFormatCommand(StreamingCommand):
         doc='''
         **Syntax:** **format=**`[cisco|dash|ieee|none]`
         **Description:** Format of the output MAC address. Defaults to `none`.''',
-        default='none',
         require=False, validate=validators.Set('cisco', 'dash', 'ieee', 'none')
         )
 
@@ -83,7 +84,6 @@ class MACFormatCommand(StreamingCommand):
         doc='''
         **Syntax:** **inputs=***<field-list>*
         **Description:** A comma-delimited list of input fields to convert. Defaults to `macaddress`.''',
-        default=['macaddress'],
         require=False, validate=validators.List()
         )
 
@@ -94,8 +94,26 @@ class MACFormatCommand(StreamingCommand):
         require=False, validate=validators.List()
         )
 
+    def prepare(self):
+        """ Prepare the options.
+
+        :return: :const:`None`
+        :rtype: NoneType
+        """
+        self.toform = globals()['_'+(self.format or self.def_format)]
+        inputs = self.inputs
+        if inputs is None:
+            self.inputs = inputs = self.def_inputs
+        outputs = self.outputs
+        if outputs is None:
+            outputs = inputs
+        elif len(outputs) < len(inputs):
+            outputs += inputs[len(outputs):]
+        self.outputs = outputs
+        self.logger.debug('MACFormatCommand.prepare: inputs = %s, outputs = %s', self.inputs, outputs)
+
     def stream(self, records):
-        toformat = globals()['_'+self.format]
+        toform = self.toform
         inputs = self.inputs
         outputs = self.outputs
         if outputs is None:
@@ -107,7 +125,18 @@ class MACFormatCommand(StreamingCommand):
             for i in range(len(inputs)):
                 mac = record.get(inputs[i])
                 if mac != None:
-                    record[outputs[i]] = toformat(mac)
+                    record[outputs[i]] = toform(mac)
             yield record
+
+    def __init__(self):
+        StreamingCommand.__init__(self)
+        appdir = path.dirname(path.dirname(__file__))
+        defconfpath = path.join(appdir, "default", "app.conf")
+        defconf = cli.readConfFile(defconfpath).get('macformat')
+        localconfpath = path.join(appdir, "local", "app.conf")
+        localconf = cli.readConfFile(localconfpath).get('macformat') if path.exists(localconfpath) else []
+        self.def_format = localconf.get('format') or defconf.get('format') or 'none'
+        inputs = localconf.get('inputs') or defconf.get('inputs')
+        self.def_inputs = re.split('[\s,]', inputs) if inputs else ['macaddress']
 
 dispatch(MACFormatCommand, sys.argv, sys.stdin, sys.stdout, __name__)
