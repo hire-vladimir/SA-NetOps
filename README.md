@@ -44,9 +44,11 @@ The ```inputs``` option is a list of comma-delimited fields in the incoming data
 
 #### Configuration
 
-| [macformat]		|
-| format=none		|
-| inputs=macaddress	|
+```
+[macformat]
+format=none
+inputs=macaddress
+```
 
 ### Macro
 ```| localop | stats count | fields - count | eval src_mac="cc-20-e8-01-ab-3f" | `normalize_mac_address(src_mac)` | lookup mac_vendor_lookup mac AS src_mac OUTPUT mac_vendor, mac_vendor_address, mac_vendor_address2, mac_vendor_country```
