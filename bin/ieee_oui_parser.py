@@ -19,7 +19,7 @@ import sys
 # set log level valid options are: (NOTSET will disable logging)
 # CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET
 LOG_LEVEL = logging.INFO
-OUI_DATASET_URL = "http://standards.ieee.org/regauth/oui/oui.txt"
+OUI_DATASET_URL = "http://standards-oui.ieee.org/oui/oui.txt"
 
 
 def setup_logging():  # setup logging
