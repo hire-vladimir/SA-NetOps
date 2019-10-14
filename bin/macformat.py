@@ -132,9 +132,9 @@ class MACFormatCommand(StreamingCommand):
         StreamingCommand.__init__(self)
         appdir = path.dirname(path.dirname(__file__))
         defconfpath = path.join(appdir, "default", "app.conf")
-        defconf = cli.readConfFile(defconfpath).get('macformat')
+        defconf = cli.readConfFile(defconfpath).get('macformat') or []
         localconfpath = path.join(appdir, "local", "app.conf")
-        localconf = cli.readConfFile(localconfpath).get('macformat') if path.exists(localconfpath) else []
+        localconf = (cli.readConfFile(localconfpath).get('macformat') or []) if path.exists(localconfpath) else []
         self.def_format = localconf.get('format') or defconf.get('format') or 'none'
         inputs = localconf.get('inputs') or defconf.get('inputs')
         self.def_inputs = re.split('[\s,]', inputs) if inputs else ['macaddress']
