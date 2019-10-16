@@ -44,7 +44,7 @@ def _ieee(mac):
 
 def _none(mac):
     ''' 112233445566 '''
-    x = delims.split(mac.lower())
+    x = delims.split(mac.strip().lower())
     if len(x) == 6:
         return ''.join([('00'+xe)[-2:] for xe in x])
     if len(x) == 3:
@@ -125,7 +125,11 @@ class MACFormatCommand(StreamingCommand):
             for i in range(len(inputs)):
                 mac = record.get(inputs[i])
                 if mac != None:
-                    record[outputs[i]] = toform(mac)
+                    try:
+                        record[outputs[i]] = toform(mac)
+                    except Exception as err:
+                        record[outputs[i]] = mac
+                        self.logger.error('(input=%s) %s', inputs[i], err.message)
             yield record
 
     def __init__(self):
