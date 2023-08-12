@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 welcomeText = '''#
 # hire.vladimir@gmail.com
 #
@@ -10,7 +10,8 @@ welcomeText = '''#
 '''
 import time, re
 import logging, logging.handlers
-from urllib2 import urlopen, Request, HTTPError
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError
 import sys
 
 #######################################
@@ -47,7 +48,7 @@ def getDataPayload(uri):
     try:
         payload = urlopen(Request(uri)).read()
         logger.debug('Received payload="%s"' % payload)
-    except HTTPError, e:
+    except HTTPError as e:
         die('HTTP exception was thrown while making request for uri="%s", status_code=%s, e="%s"' % (uri, e.code, e))
 
     logger.info('function="getDataPayload" action="success" request="%s", bytes_in="%s"' % (uri, len(payload)))
@@ -85,7 +86,7 @@ if __name__ == '__main__':
             print('"%s*","%s","%s","%s","%s"' % (normalized_mac.lower(), mac_vendor,
                                                  ' '.join(wspace.split(mac_vendor_address)),
                                                  ' '.join(wspace.split(mac_vendor_address2)), mac_vendor_country))
-    except Exception, e:
+    except Exception as e:
         logger.error('error while processing events, exception="%s"' % e)
         # raise Exception(e)
     finally:
