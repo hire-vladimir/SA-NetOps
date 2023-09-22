@@ -1,4 +1,4 @@
-<dashboard>
+<dashboard version="1.1">
   <label>Sample CIDR Assets</label>
   <row>
     <panel>
@@ -9,7 +9,7 @@
         <p>
           This feature is designed to help users identify assets by subnet mask. Most users cannot easily convert subnets to CIDRs withouth some python tool or external scripts.
           The application ships with sample lookup files and blank template lookup files for the user to populate. Using a similiar syntax below, the customer can delineate subnets in an automatic lookup to run against all data sources.
-          An automatic lookup is preferred because it helps to indentify netwrok traffic trends in various logs. For example, infected assets in a DMZ subnet may not be as high of a priority as infected assets in a PCI subnet. 
+          An automatic lookup is preferred because it helps to indentify netwrok traffic trends in various logs. For example, infected assets in a DMZ subnet may not be as high of a priority as infected assets in a PCI subnet.
           <br/>
         </p>
         <h1>
@@ -32,16 +32,16 @@ remarks
 segment
 subnet_mask
 zone
-          
+
 # Other fields you can add:
 # lat
 # lon
 # cidr_address
 # usable_hosts
 # binary_mask
-          
+
 Alternatively, you can override these to prefix them with src_ or dest_ by overriding props.conf in local.
-          
+
 LOOKUP-subnet-intelligence_src = cidr_network cidr_address AS src_ip OUTPUT network AS src_network physical_address AS src_physical_address priority AS src_priority remarks AS src_remarks segment AS src_segment subnet_mask AS src_subnet_mask zone AS src_zone
 
 LOOKUP-subnet-intelligence_dest = cidr_network cidr_address AS dest_ip OUTPUT network AS dest_network physical_address AS dest_physical_address priority AS dest_priority remarks AS dest_remarks segment AS dest_segment subnet_mask AS dest_subnet_mask zone AS dest_zone
@@ -62,7 +62,7 @@ LOOKUP-subnet-intelligence_dest = cidr_network cidr_address AS dest_ip OUTPUT ne
         <option name="drilldown">row</option>
       </table>
     </panel>
-    
+
   </row>
   <row>
 <panel>

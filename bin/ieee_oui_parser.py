@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 welcomeText = '''#
 # hire.vladimir@gmail.com
 #
-# takes in http://standards.ieee.org/regauth/oui/oui.txt dataset, makes it pretty csv
+# takes in OUI dataset from the IEEE at the OUI_DATASET_URL, makes it pretty csv
 #
 # rev. history
 # 9/28/15 1.0 initial write
@@ -10,7 +10,7 @@ welcomeText = '''#
 '''
 import time, re
 import logging, logging.handlers
-from urllib2 import urlopen, Request, HTTPError
+import requests
 import sys
 
 #######################################
@@ -19,7 +19,7 @@ import sys
 # set log level valid options are: (NOTSET will disable logging)
 # CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET
 LOG_LEVEL = logging.INFO
-OUI_DATASET_URL = "http://standards-oui.ieee.org/oui/oui.txt"
+OUI_DATASET_URL = "https://standards-oui.ieee.org/oui/oui.txt"
 
 
 def setup_logging():  # setup logging
@@ -45,13 +45,15 @@ def getDataPayload(uri):
     logger.debug("Request uri=\"%s\"" % uri)
     payload = ""
     try:
-        payload = urlopen(Request(uri)).read()
+        with requests.get(uri) as response:
+            response.raise_for_status()
+            payload = response.content
         logger.debug('Received payload="%s"' % payload)
-    except HTTPError, e:
+    except requests.HTTPError as e:
         die('HTTP exception was thrown while making request for uri="%s", status_code=%s, e="%s"' % (uri, e.code, e))
 
     logger.info('function="getDataPayload" action="success" request="%s", bytes_in="%s"' % (uri, len(payload)))
-    return payload
+    return payload.decode('utf-8')
 
 
 if __name__ == '__main__':
@@ -64,7 +66,7 @@ if __name__ == '__main__':
         logger.debug("calling args_count=\"%d\" args=\"%s\"" % (len(sys.argv), str(sys.argv)))
         if len(sys.argv) > 1:
             filename = sys.argv[1]
-            if filename[0:1] is not "/":
+            if filename[0:1] != "/":
                 filename = "./%s" % filename
 
             with open(filename, "r") as oui:
@@ -72,8 +74,8 @@ if __name__ == '__main__':
         else:
             data = getDataPayload(OUI_DATASET_URL)
 
-        pattern = "(?P<mac>\w{6})\s+\(base\s16\)\s+(?:(?P<mac_vendor>[^\n]+)\n)(?:\s+(?P<mac_vendor_address>[^\n\r]+)\n)?(?:\s+(?P<mac_vendor_address2>[^\n]+)\n)?(?:\s+(?P<mac_vendor_country>\w{2}))?\n"
-        ma = re.findall(pattern, data.replace("\r", ""))
+        pattern = "(?P<mac>\w{6})\s+\(base\s16\)\s+(?:(?P<mac_vendor>[^\n\r]+)[\n\r]+)(?:\s+(?P<mac_vendor_address>[^\n\r]+)[\n\r]+)?(?:\s+(?P<mac_vendor_address2>[^\n\r]+)[\n\r]+)?(?:\s+(?P<mac_vendor_country>\w{2}))?[\n\r]"
+        ma = re.findall(pattern, data)
 
         logger.debug("there are %d matches" % len(ma))
 
@@ -85,7 +87,7 @@ if __name__ == '__main__':
             print('"%s*","%s","%s","%s","%s"' % (normalized_mac.lower(), mac_vendor,
                                                  ' '.join(wspace.split(mac_vendor_address)),
                                                  ' '.join(wspace.split(mac_vendor_address2)), mac_vendor_country))
-    except Exception, e:
+    except Exception as e:
         logger.error('error while processing events, exception="%s"' % e)
         # raise Exception(e)
     finally:

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ##
 ## This program is licensed under the GPL v3.0, which is found at the URL below:
 ##	http://opensource.org/licenses/gpl-3.0.html
@@ -135,7 +135,7 @@ class MACFormatCommand(StreamingCommand):
     def __init__(self):
         StreamingCommand.__init__(self)
         appdir = path.dirname(path.dirname(__file__))
-        defconfpath = path.join(appdir, "default", "app.conf")
+        defconfpath = path.join(appdir, "default", "options.conf")
         defconf = cli.readConfFile(defconfpath).get('macformat') or {}
         localconfpath = path.join(appdir, "local", "app.conf")
         localconf = (cli.readConfFile(localconfpath).get('macformat') or {}) if path.exists(localconfpath) else {}
